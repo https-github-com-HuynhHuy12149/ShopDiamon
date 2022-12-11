@@ -17,12 +17,7 @@ import DiamonShop.Entity.Slides;
 @Repository
 public class HomeDao extends BaseDao{
 	
-//	public List<Slides> GetDataSlides(){
-//		List<Slides> list = new ArrayList<Slides>();
-//		String sql ="select * from slides";
-//		list = _jdbcTemplate.query(sql, new MapperSlides());
-//		return list;
-//	}
+
 	
 	
 }
