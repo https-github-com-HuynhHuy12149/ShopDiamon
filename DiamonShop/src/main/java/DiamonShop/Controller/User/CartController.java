@@ -21,7 +21,82 @@ import DiamonShop.Service.User.CartServiceImlp;
 
 @Controller
 public class CartController extends BaseController {
-
+	@Autowired
+	private CartServiceImlp cartService = new CartServiceImlp(); 
+	@Autowired
+	private BillsServiceImpl billsService = new BillsServiceImpl();
+	@RequestMapping(value = "gio-hang")
+	public ModelAndView Index() {
+		_mvShare.addObject("slides", _homeService.GetDataSlides());
+		_mvShare.addObject("categorys", _homeService.GetDataCategorys());
+		_mvShare.addObject("products", _homeService.GetDataProducts());
+		_mvShare.setViewName("user/cart/listcart");
+		return _mvShare;
+	}
+	@RequestMapping(value = "AddCart/{id}")
+	public String AddCart(HttpServletRequest request ,HttpSession session, @PathVariable long id) {
+		HashMap<Long, CartDto> cart = (HashMap<Long, CartDto>)session.getAttribute("Cart");
+		if(cart == null) {
+			cart = new HashMap<Long, CartDto>();
+		}
+		cart = cartService.AddCart(id, cart);
+		session.setAttribute("Cart", cart);
+		session.setAttribute("TotalQuantyCart", cartService.TotalQuanty(cart));
+		session.setAttribute("TotalPriceCart", cartService.TotalPrice(cart));
+		return "redirect:"+request.getHeader("Referer");
+	}
+	
+	@RequestMapping(value = "EditCart/{id}/{quanty}")
+	public String EditCart(HttpServletRequest request ,HttpSession session, @PathVariable long id,@PathVariable int quanty) {
+		HashMap<Long, CartDto> cart = (HashMap<Long, CartDto>)session.getAttribute("Cart");
+		if(cart == null) {
+			cart = new HashMap<Long, CartDto>();
+		}
+		cart = cartService.EditCart(id, quanty, cart);
+		session.setAttribute("Cart", cart);
+		session.setAttribute("TotalQuantyCart", cartService.TotalQuanty(cart));
+		session.setAttribute("TotalPriceCart", cartService.TotalPrice(cart));
+		return "redirect:"+request.getHeader("Referer");
+	}
+	
+	
+	@RequestMapping(value = "DeleteCart/{id}")
+	public String DeleteCart(HttpServletRequest request ,HttpSession session, @PathVariable long id) {
+		HashMap<Long, CartDto> cart = (HashMap<Long, CartDto>)session.getAttribute("Cart");
+		if(cart == null) {
+			cart = new HashMap<Long, CartDto>();
+		}
+		cart = cartService.DeleteCart(id, cart);
+		session.setAttribute("Cart", cart);
+		session.setAttribute("TotalQuantyCart", cartService.TotalQuanty(cart));
+		session.setAttribute("TotalPriceCart", cartService.TotalPrice(cart));
+		return "redirect:"+request.getHeader("Referer");
+	}
+	@RequestMapping(value = "checkout",method = RequestMethod.GET)
+	public ModelAndView CheckOut(HttpServletRequest request ,HttpSession session) {
+		
+		_mvShare.setViewName("user/bill/checkout");
+		Bills bills = new Bills();
+		Users loginInfo = (Users)session.getAttribute("LoginInfo");
+		if(loginInfo != null) {
+			 	bills.setAddress(loginInfo.getAddress());
+			 	bills.setDisplay_name(loginInfo.getDisplay_name());
+			 	bills.setUser(loginInfo.getUser());
+			 	
+		}
+		_mvShare.addObject("bills", bills);
+		return _mvShare;
+	}
+	@RequestMapping(value = "checkout/checkout",method = RequestMethod.POST)
+	public ModelAndView  CheckOutBill(HttpServletRequest request ,HttpSession session,@ModelAttribute("bills") Bills bill) {
+		if(billsService.AddBills(bill) > 0) {
+			HashMap<Long , CartDto> carts = (HashMap<Long, CartDto>)session.getAttribute("Cart");
+			billsService.AddBillsDetail(carts);
+		}
+		session.removeAttribute("Cart");
+		_mvShare.setViewName("user/cart/listcart");
+		return _mvShare;
+	}
 	
 	
 }
