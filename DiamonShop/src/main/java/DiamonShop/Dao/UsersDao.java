@@ -26,7 +26,7 @@ public class UsersDao extends BaseDao {
 	sql.append("  '"+user.getDisplay_name()+"',");
 	sql.append("  '"+user.getAddress()+"'");
 	sql.append(")");
-	int insert = _jdbcTemplate.update(sql.toString());
+	int insert = _jdbcTemplate.update(sql.toString()); 
 	return insert;
 };
 public Users GetUserByAcc(Users user) {
