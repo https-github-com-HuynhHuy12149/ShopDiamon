@@ -17,6 +17,12 @@ import DiamonShop.Entity.Slides;
 
 @Repository
 public class CategorysDao extends BaseDao {
+	public List<Categorys> GetDataCategorys(){
+	List<Categorys> list = new ArrayList<Categorys>();
+	String sql ="select * from categorys";
+	list = _jdbcTemplate.query(sql, new MapperCategorys());
+	return list;
 	
+}
 
 }
