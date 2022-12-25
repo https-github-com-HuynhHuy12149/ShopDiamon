@@ -16,7 +16,7 @@ public class MenusDao extends BaseDao {
 	List<Menus> list = new ArrayList<Menus>();
 	String sql ="select * from menus";
 	list = _jdbcTemplate.query(sql, new MapperMenus());
-	return list;
+	return list;  
 	
 }
 }
