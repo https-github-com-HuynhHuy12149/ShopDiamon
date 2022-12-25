@@ -9,7 +9,18 @@ import DiamonShop.Dao.ProductsDao;
 import DiamonShop.Dto.ProductsDto;
 @Service
 public class CategoryServiceImpl implements ICategoryService {
+	@Autowired
+	private ProductsDao productsDao;
 
+	public List<ProductsDto> GetAllProductsByID(int id) {
+		// TODO Auto-generated method stub
+		return productsDao.GetAllProductsByID(id);
+	}
+
+	public List<ProductsDto> GetDataProductsPaginate(int id ,int start, int totalPage) {
+		// TODO Auto-generated method stub
+		return productsDao.GetDataProductsPaginate(id ,start, totalPage);
+	}
 
 	
 

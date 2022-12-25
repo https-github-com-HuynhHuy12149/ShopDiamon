@@ -13,5 +13,26 @@ import DiamonShop.Entity.Bills;
 @Service
 public class BillsServiceImpl implements IBillService{
 
+	@Autowired
+	private BillsDao billsDao;
 	
+	public int AddBills(Bills bill) {
+		// TODO Auto-generated method stub
+		return billsDao.AddBills(bill);
+	}
+
+	public void AddBillsDetail(HashMap<Long, CartDto> carts) {
+		// TODO Auto-generated method stub
+		long idbills = billsDao.GetIDLastBills();
+		for(Map.Entry<Long, CartDto> itemCart : carts.entrySet()) {
+			BillDetail billDetail = new BillDetail();
+			
+			billDetail.setId_bills(idbills);
+			billDetail.setId_product(itemCart.getValue().getProduct().getId_product());
+			billDetail.setQuanty(itemCart.getValue().getQuanty());
+			billDetail.setTotal(itemCart.getValue().getTotalPrice());
+			billsDao.AddBillsDetail(billDetail);
+			
+		}
+	}
 }
