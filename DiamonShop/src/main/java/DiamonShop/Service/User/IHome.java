@@ -12,4 +12,9 @@ import DiamonShop.Entity.Slides;
 
 @Service
 public interface IHome {
+	@Autowired
+	public List<Slides> GetDataSlides();
+	public List<Categorys> GetDataCategorys();
+	public List<Menus> GetDataMenus();
+	public List<ProductsDto> GetDataProducts();
 }
